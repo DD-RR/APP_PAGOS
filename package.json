@@ -1,0 +1,31 @@
+{
+  "name": "APP_PAGOS",
+  "version": "1.0.0",
+  "description": "App en express modo db y mongoose Login, Usuarios, Movimientos Login user y pass Usuarios User Nombre email Pass Por cada usuario va a ver movimientos -Movimientos (Por usuarios) Tipo(Ingreso o egreso) Concepto (Ingresos oh egresos) Valor ($$$$) ( Saldos No negativos )",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DD-RR/APP_PAGOS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DD-RR/APP_PAGOS/issues"
+  },
+  "homepage": "https://github.com/DD-RR/APP_PAGOS#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.3",
+    "mongoose": "^5.9.1",
+    "validator": "^12.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
