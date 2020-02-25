@@ -3,6 +3,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+
 const userSchema = new mongoose.Schema({
     usuario: {
         type: String,
@@ -37,13 +38,19 @@ const userSchema = new mongoose.Schema({
                 throw new Error('La contraseña no se ah ingresado');
             }
         } 
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 })
 
 userSchema.virtual('mov', {
     ref: 'Mov',
     localField: '_id',
-    foreignField: 'owner'
+    foreignField: 'propietario'
 }) 
 
 userSchema.pre('save', async function (next) {
@@ -75,10 +82,12 @@ userSchema.methods.toJSON = function () {
 }
 
 userSchema.methods.generateAuthToken = async function () {
-    const user = this 
-    const token = jwt.sign({ _id: user._id.toString() }, 'jsonwebtoken')
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisismynewcourse')
+
     user.tokens = user.tokens.concat({ token })
     await user.save()
+
     return token
 }
 

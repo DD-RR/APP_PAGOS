@@ -1,13 +1,12 @@
 const express = require('express')
+const moment = require('moment')
 const Mov = require('../models/mov')
 const User = require('../models/users')
 const router = new express.Router()
 
+
 router.post('/movi', async (req, res) => {
-    /* const mov = new Mov({
-        ...req.body,
-        owner: req.user._id
-    }) */
+    
     const mov = new Mov(req.body)
 
     try {
@@ -18,24 +17,7 @@ router.post('/movi', async (req, res) => {
     }
 })
 
-router.post('/movi', async (req, res) => {
-    const user = await User.findById(req.body.propietario);
-    if (!user) {
-        return res.status(400).send()
-    };
-    
-    const mov = new Mov({
-        ...req.body
-    })
-
-    try {
-        await mov.save()
-        res.status(201).send(mov)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
+//Busqueda Todos Movimientos
 router.get('/movi', async (req, res) => {
     try {
         const movi = await Mov.find({})
@@ -45,9 +27,9 @@ router.get('/movi', async (req, res) => {
     }
 })
 
+// Busqueda por el id del movimiento
 router.get('/movi/:id', async (req, res) => {
     const _id = req.params.id
-
     try {
         const mov = await Mov.findById(_id)
         if (!mov) {
@@ -59,12 +41,29 @@ router.get('/movi/:id', async (req, res) => {
     }
 })
 
-router.get('/mov/fecha', async (req, res) => {
-    const fecha = req.params.fecha
 
+router.get('/movi/owner/owner/:propietario', async (req, res) => {
+    // console.log('Algo');
     try {
-        const mov = await Mov.find(fecha)
-        if (!fecha) {
+        const mov = await Mov.find({propietario: req.params.propietario});
+        console.log(mov);
+        if (!mov) {
+            return res.status(404).send();
+        }
+        res.send(mov);
+    } catch (e) {
+        res.status(500).send();
+    }
+})
+
+//Consultar los movimientos por fecha con (query string)
+router.get('/movi/date/month/day', async (req, res) => {
+    // console.log('algo');
+    try {
+        //  busca los parametros dentro del objeto req.query (query string)
+        const mov = await Mov.find({ fecha: req.query.fecha })
+        // console.log(mov);
+        if (!mov) {
             return res.status(404).send()
         }
         res.send(mov)
@@ -103,6 +102,10 @@ router.delete('/movi/:id', async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
+})
+
+router.get('/movi/', async (req, res) => {
+    
 })
 
 module.exports = router
