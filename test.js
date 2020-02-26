@@ -57,15 +57,26 @@ console.log("Ejemplo sumas y comparaciones con foreach");
 console.log('------');
 
 // a.forEach((ele, index ) => console.log(ele.data.sexo, ( ' -- ' ), index ))
-a.forEach((a) => {
-    console.log(a.data.sexo);
+
+var sum = 0;
+var prom = 0;
+var cont = 0;
+
+a.forEach((algo) => {
+    if (algo.data.sexo == 'Masculino') {
+        cont += 1;
+        sum += algo.data.edad;
+        console.log(sum);
+        
+    }
 })
+prom = sum / cont;
+console.log(prom);
 
 console.log('------');
-sum = 0;
 //a.forEach(elem => sum += elem.data.edad)
-console.log(sum);
-console.log('------');
+/* console.log(sum);
+console.log('------'); */
 
 
 
