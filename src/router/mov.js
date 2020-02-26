@@ -104,7 +104,19 @@ router.delete('/movi/:id', async (req, res) => {
     }
 })
 
-router.get('/movi/', async (req, res) => {
+//Último Movimiento
+router.get('/movi/search/user/owner/bd/:propietario', async (req, res) => {
+    console.log('Algo');
+    try {
+        const mov = await Mov.find({propietario: req.params.propietario, fecha: req.query.fecha})
+        console.log(mov);
+        if (!mov) {
+            res.status(404).send()
+        }
+        res.send(mov)
+    } catch (e) {
+        res.status(500).send()        
+    }
     
 })
 
