@@ -44,7 +44,7 @@ router.get('/movi/:id', async (req, res) => {
 })
 
 
-router.get('/movi/owner/owner/:propietario', async (req, res) => {
+router.get('/movi/owner/:propietario', async (req, res) => {
     // console.log('Algo');
     try {
         const mov = await Mov.find({propietario: req.params.propietario});
@@ -59,7 +59,7 @@ router.get('/movi/owner/owner/:propietario', async (req, res) => {
 })
 
 //Consultar los movimientos por fecha con (query string)
-router.get('/movi/date/month/day', async (req, res) => {
+router.get('/movi/date/day', async (req, res) => {
     // console.log('algo');
     try {
         //  busca los parametros dentro del objeto req.query (query string)
@@ -107,7 +107,7 @@ router.delete('/movi/:id', async (req, res) => {
 })
 
 //Último Movimiento
-router.get('/movi/search/user/owner/bd/:propietario', async (req, res) => {
+router.get('/movi/search/:propietario', async (req, res) => {
     console.log('Algo');
     try {
         const mov = await Mov.find({propietario: req.params.propietario, fecha: req.query.fecha})
@@ -122,7 +122,7 @@ router.get('/movi/search/user/owner/bd/:propietario', async (req, res) => {
     
 })
 //Busqueda por motivo 
-router.get('/movi/search/movimiento/entry/db/total/:motivo', async (req, res) =>{
+router.get('/movi/total/:motivo', async (req, res) =>{
     try {
         const mov = await Mov.find({motivo: req.params.motivo})
         //console.log(mov);
@@ -135,7 +135,7 @@ router.get('/movi/search/movimiento/entry/db/total/:motivo', async (req, res) =>
     }
 })
 //suma de totales por motivo
-router.get('/movi/search/movimiento/entry/db/total/:motivo', async (req, res) =>{
+router.get('/movi/movs/:motivo', async (req, res) =>{
     try {
         const mov = await Mov.find({ motivo: req.params.motivo, cantidad: req.query.cantidad})
             mov.forEach(movi => {
@@ -144,7 +144,7 @@ router.get('/movi/search/movimiento/entry/db/total/:motivo', async (req, res) =>
                     sum += movi.cantidad;
                 }
             });
-            console.log(mov);
+            //console.log(mov);
             console.log('El total es: ', + sum);     
         if (!mov) {
             res.status(404).send()
@@ -156,22 +156,34 @@ router.get('/movi/search/movimiento/entry/db/total/:motivo', async (req, res) =>
 })
 
 //Buesuqeda por rango de fecha
-router.get('/movi/search/movimiento/entry/db/total/rFecha/:motivo', async (req, res) =>{
+router.get('/movi/fecha/rFecha', async (req, res) =>{
+    
     try {
-        const mov = await Mov.find({ motivo: req.params.motivo, fecha: req.query.fecha })
+        const mov = await Mov.find({
+            fecha: {
+                $gte: new Date (new Date(req.query.fechaInicio).setHours(00,00,00)),
+                $lt: new Date (new Date(req.query.fechaFin).setHours(23,59,59))
+            }
+        })
             mov.forEach(movi => {
-                if (movi.cantidad ) {
+                if (movi.motivo == 'Ingreso' ) {
+                    movi.cantidad
                     cont += 1;
                     sum += movi.cantidad;
+                } else {
+                    movi.cantidad;
+                    cont +=1;
+                    sum -= movi.cantidad
                 }
             });
-            console.log(mov);
-            console.log('El total es: ', + sum);     
+            // console.log(mov);
+            console.log('El Total es: ', + sum);     
         if (!mov) {
             res.status(404).send()
         }
         res.send(mov)
     } catch (e) {
+        console.log(e);
         res.status(500).send()
     } 
 })

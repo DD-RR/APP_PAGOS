@@ -24,7 +24,14 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-
+router.post('/users/logout', async (req, res) => {
+    try {
+        const user = await User.find({token: req.params.token})
+        res.send({user})
+    } catch (e) {
+        res.status(500).send()
+    }
+})
 
 router.get('/users', async(req, res) => {
     try {
