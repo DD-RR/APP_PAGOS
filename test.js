@@ -83,3 +83,27 @@ console.log('------'); */
 
 /* var edadesTotal = a.forEach(function(ele){ ele.data.edad + sum});
 console.log(edadesTotal); */
+
+
+const getData = async (start, end) => {
+    const pipeline = [
+      {
+        $match: {
+          createdAt: {
+            $gte: start.toDate(),
+            $lt: end.toDate(),
+          },
+        },
+      },
+      {
+        $project: {
+          _id: false,
+          externalId: '$completeDriver.externalId',        
+        },
+      },
+    ];
+  
+    mongo.finalize(connMongo);
+  
+    return data;
+  };
