@@ -3,9 +3,7 @@ const moment = require('moment')
 const Mov = require('../models/mov')
 const User = require('../models/users')
 const router = new express.Router()
-var sum = 0;
-var sum1 = 0;
-var cont = 0;
+
 
 router.post('/movi', async (req, res) => {
     
@@ -137,10 +135,11 @@ router.get('/movi/total/:motivo', async (req, res) =>{
 //suma de totales por motivo
 router.get('/movi/movs/:motivo', async (req, res) =>{
     try {
+        var cont = 0;
+        var sum1 = 0;
         const mov = await Mov.find({ motivo: req.params.motivo})
             mov.forEach(movi => {
                 if (movi.motivo == req.params.motivo ) {
-                    movi.cantidad
                     cont += 1;
                     sum1 += movi.cantidad;
                 }
@@ -160,6 +159,8 @@ router.get('/movi/movs/:motivo', async (req, res) =>{
 router.get('/movi/fecha/rFecha', async (req, res) =>{
     
     try {
+        var cont = 0;
+        var sum = 0;
         const mov = await Mov.find({
             fecha: {
                 $gte: new Date (new Date(req.query.fechaInicio).setHours(00,00,00)),
@@ -168,7 +169,6 @@ router.get('/movi/fecha/rFecha', async (req, res) =>{
         })
             mov.forEach(movi => {
                 if (movi.motivo == 'Ingreso' ) {
-                    movi.cantidad
                     cont += 1;
                     sum += movi.cantidad;
                 } else {
@@ -187,6 +187,30 @@ router.get('/movi/fecha/rFecha', async (req, res) =>{
         console.log(e);
         res.status(500).send()
     } 
+})
+
+router.get('/movi/saldo/:propietario', async (req, res) => {
+    try {
+        cont = 0;
+        sum = 0;
+        const mov = await Mov.find({propietario: req.params.propietario})
+        mov.forEach(movi => {
+            if (movi.motivo == 'Ingreso') {
+                cont += 1;
+                sum += movi.cantidad
+            } else {
+                sum -= movi.cantidad
+            }
+        });
+        console.log('El total es: ' + sum);
+        if (!mov) {
+            res.status(404).send()
+        }
+        //res.send(mov)
+        return res.status(202).send({ Suma: 'La suma es ' + sum })
+    } catch (e) {
+        res.status(500).send();
+    }
 })
 
 module.exports = router

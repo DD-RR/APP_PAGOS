@@ -58,9 +58,9 @@ console.log('------');
 
 // a.forEach((ele, index ) => console.log(ele.data.sexo, ( ' -- ' ), index ))
 
-var sum = 0;
+/* var sum = 0;
 var prom = 0;
-var cont = 0;
+var cont = 0; */
 
 a.forEach((algo) => {
     if (algo.data.sexo == 'Masculino') {
