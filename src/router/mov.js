@@ -203,11 +203,11 @@ router.get('/movi/saldo/:propietario', async (req, res) => {
             }
         });
         console.log('El total es: ' + sum);
+        return res.send({ Suma: 'La suma es ' + sum })
         if (!mov) {
             res.status(404).send()
         }
         //res.send(mov)
-        return res.status(202).send({ Suma: 'La suma es ' + sum })
     } catch (e) {
         res.status(500).send();
     }
