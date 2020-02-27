@@ -4,7 +4,7 @@ const Mov = require('../models/mov')
 const User = require('../models/users')
 const router = new express.Router()
 var sum = 0;
-var prom = 0;
+var sum1 = 0;
 var cont = 0;
 
 router.post('/movi', async (req, res) => {
@@ -137,19 +137,20 @@ router.get('/movi/total/:motivo', async (req, res) =>{
 //suma de totales por motivo
 router.get('/movi/movs/:motivo', async (req, res) =>{
     try {
-        const mov = await Mov.find({ motivo: req.params.motivo, cantidad: req.query.cantidad})
+        const mov = await Mov.find({ motivo: req.params.motivo})
             mov.forEach(movi => {
-                if (movi.cantidad ) {
+                if (movi.motivo == req.params.motivo ) {
+                    movi.cantidad
                     cont += 1;
-                    sum += movi.cantidad;
+                    sum1 += movi.cantidad;
                 }
             });
             //console.log(mov);
-            console.log('El total es: ', + sum);     
-        if (!mov) {
-            res.status(404).send()
-        }
-        res.send(mov)
+            console.log('El total es: ', + sum1);
+            if (!mov) {
+                res.status(404).send()
+            }
+            res.send(mov)   
     } catch (e) {
         res.status(500).send()
     } 
