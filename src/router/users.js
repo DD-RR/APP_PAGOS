@@ -1,9 +1,10 @@
 const express = require('express')
 const User = require('../models/users')
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
 
-router.post('/users', async (req, res) => {
+router.post('/users', auth, async (req, res) => {
     const user = new User(req.body)
 
     try {
@@ -17,8 +18,11 @@ router.post('/users', async (req, res) => {
 router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
+        console.log(user);
         const token = await user.generateAuthToken();
+        console.log(token);
         res.send({ user, token })
+        console.log(res.send);
     } catch (e) {
         res.status(400).send()
     }
@@ -31,9 +35,9 @@ router.post('/users/logout', async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
-})
+}) 
 
-router.get('/users', async(req, res) => {
+router.get('/users', auth, async(req, res) => {
     try {
         const users = await User.find({})
         res.send(users)
@@ -41,7 +45,7 @@ router.get('/users', async(req, res) => {
         res.status(500).send()
     }
 })
-router.get('/users/:id', async(req, res) => {
+router.get('/users/:id', auth, async(req, res) => {
     const _id = req.params.id
     try {
         const user = await User.findById(_id)
@@ -54,7 +58,7 @@ router.get('/users/:id', async(req, res) => {
     }
 })
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['usuario', 'nombre', 'email', 'password']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -75,7 +79,7 @@ router.patch('/users/:id', async (req, res) => {
     }
 })
 
-router.delete('/users/:id', async(req, res) => {
+router.delete('/users/:id', auth, async(req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id)
 
