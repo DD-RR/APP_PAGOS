@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
             }
         } 
     },
-    tokens: [{
+    token: [{
         token: {
             type: String
         }
@@ -57,6 +57,12 @@ userSchema.pre('save', async function (next) {
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
+    next()
+})
+
+userSchema.pre('remove', async function (next) {
+    const user = this
+    await Mov.deleteMany({ propietario: user._id})
     next()
 })
 
@@ -84,7 +90,7 @@ userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, 'jsonwebtoken')
 
-    user.tokens = user.tokens.concat({ token })
+    user.token = user.token.concat({ token })
     await user.save()
 
     return token
